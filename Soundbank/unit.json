@@ -1,0 +1,97 @@
+{
+  "format": "synth-bank",
+  "version": 1,
+  "name": "unit",
+  "patches": [
+    {
+      "name": "01 by RAMON&METIN",
+      "file": "PATCHES\\unit\\unit_01_by_RAMON_METIN.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "02",
+      "file": "PATCHES\\unit\\unit_02.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "03 www.totalKaos.de",
+      "file": "PATCHES\\unit\\unit_03_www_totalKaos_de.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "04",
+      "file": "PATCHES\\unit\\unit_04.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "05 hihat",
+      "file": "PATCHES\\unit\\unit_05_hihat.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "06 aa",
+      "file": "PATCHES\\unit\\unit_06_aa.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "07 haa",
+      "file": "PATCHES\\unit\\unit_07_haa.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "08 snap",
+      "file": "PATCHES\\unit\\unit_08_snap.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "09 woei",
+      "file": "PATCHES\\unit\\unit_09_woei.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "10 unit a",
+      "file": "PATCHES\\unit\\unit_10_unit_a.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "11 yok",
+      "file": "PATCHES\\unit\\unit_11_yok.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "12 giddelagunk",
+      "file": "PATCHES\\unit\\unit_12_giddelagunk.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "13 ring",
+      "file": "PATCHES\\unit\\unit_13_ring.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "14 euh",
+      "file": "PATCHES\\unit\\unit_14_euh.json",
+      "octave": 3,
+      "category": "unit"
+    },
+    {
+      "name": "15 poop",
+      "file": "PATCHES\\unit\\unit_15_poop.json",
+      "octave": 3,
+      "category": "unit"
+    }
+  ]
+}

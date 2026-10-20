@@ -1,0 +1,97 @@
+{
+  "format": "synth-patch",
+  "version": 1,
+  "name": "unit_06_aa",
+  "source": {
+    "type": "sample",
+    "wave": "sine",
+    "root": "C4",
+    "loop": true,
+    "loop_start": 0.6645520953479431,
+    "loop_end": 0.9753940792003076,
+    "loop_xfade": 0.0,
+    "loop_snap": false,
+    "sample": {
+      "file": "..\\..\\WAV\\unit\\unit_06_aa.wav",
+      "file_abs": "C:\\!Source\\!Python\\SynthSeq\\WAV\\unit\\unit_06_aa.wav"
+    }
+  },
+  "envelope": {
+    "attack": 0.002,
+    "decay": 0.002,
+    "sustain": 1.0,
+    "release": 0.005
+  },
+  "volume": 0.3,
+  "unison": 1,
+  "detune": 0.0,
+  "normalize": false,
+  "modulator": null,
+  "effects": [
+    {
+      "type": "Vocoder",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Filter",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Offset-LFO",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Overdrive",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Fuzz",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Distortion",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Bitcrusher",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Flanger",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Chorus",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Phaser",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Tremolo",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Echo",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Reverb",
+      "enabled": false,
+      "params": {}
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "format": "synth-patch",
+  "version": 1,
+  "name": "vocoder2",
+  "source": {
+    "type": "generator",
+    "wave": "saw",
+    "root": "C4",
+    "loop": false,
+    "loop_start": 0.0,
+    "loop_end": 1.0,
+    "loop_xfade": 0.0,
+    "loop_snap": false,
+    "sample": null
+  },
+  "envelope": {
+    "attack": 0.01,
+    "decay": 0.1,
+    "sustain": 0.7,
+    "release": 0.3
+  },
+  "volume": 0.5933333333333333,
+  "unison": 1,
+  "detune": 0.0,
+  "normalize": false,
+  "modulator": {
+    "file": "..\\Wav\\err.wav",
+    "file_abs": "C:\\!Source\\!Python\\SynthSeq\\Wav\\err.wav"
+  },
+  "effects": [
+    {
+      "type": "Vocoder",
+      "enabled": true,
+      "params": {
+        "level": 1.9466666666666668,
+        "smooth": 0.0,
+        "hiss": 1.0,
+        "mix": 0.9666666666666666
+      }
+    },
+    {
+      "type": "Filter",
+      "enabled": false,
+      "params": {
+        "mode": 0.0,
+        "cutoff": 0.5,
+        "q": 2.0,
+        "rate": 0.5,
+        "depth": 0.0,
+        "mix": 1.0
+      }
+    },
+    {
+      "type": "Offset-LFO",
+      "enabled": false,
+      "params": {
+        "rate": 0.28,
+        "depth": 0.1
+      }
+    },
+    {
+      "type": "Overdrive",
+      "enabled": false,
+      "params": {
+        "drive": 0.5,
+        "hard": 0.3,
+        "tone": 0.6,
+        "level": 0.7,
+        "mix": 1.0
+      }
+    },
+    {
+      "type": "Fuzz",
+      "enabled": false,
+      "params": {
+        "sustain": 0.6,
+        "bias": 0.15,
+        "tone": 0.5,
+        "level": 0.5,
+        "mix": 1.0
+      }
+    },
+    {
+      "type": "Distortion",
+      "enabled": false,
+      "params": {
+        "drive": 5.0,
+        "mix": 0.7
+      }
+    },
+    {
+      "type": "Bitcrusher",
+      "enabled": false,
+      "params": {
+        "bits": 8.0,
+        "down": 4.0,
+        "mix": 1.0
+      }
+    },
+    {
+      "type": "Flanger",
+      "enabled": true,
+      "params": {
+        "delay_ms": 3.0,
+        "depth_ms": 2.0,
+        "rate": 0.5,
+        "feedback": 0.5,
+        "mix": 0.5
+      }
+    },
+    {
+      "type": "Chorus",
+      "enabled": false,
+      "params": {
+        "delay_ms": 18.0,
+        "depth_ms": 4.0,
+        "rate": 0.8,
+        "mix": 0.5
+      }
+    },
+    {
+      "type": "Phaser",
+      "enabled": false,
+      "params": {
+        "rate": 0.4,
+        "center": 700.0,
+        "depth": 0.6,
+        "feedback": 0.4,
+        "stages": 4.0,
+        "mix": 0.5
+      }
+    },
+    {
+      "type": "Tremolo",
+      "enabled": false,
+      "params": {
+        "rate": 5.0,
+        "depth": 0.6
+      }
+    },
+    {
+      "type": "Echo",
+      "enabled": false,
+      "params": {
+        "delay_ms": 300.0,
+        "feedback": 0.4,
+        "damp": 0.0,
+        "mix": 0.35
+      }
+    },
+    {
+      "type": "Reverb",
+      "enabled": false,
+      "params": {
+        "room": 0.6,
+        "damp": 0.4,
+        "mix": 0.3
+      }
+    }
+  ]
+}

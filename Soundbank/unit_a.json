@@ -1,0 +1,43 @@
+{
+  "format": "synth-bank",
+  "version": 1,
+  "name": "unit_a",
+  "patches": [
+    {
+      "name": "01 This mod is one of",
+      "file": "PATCHES\\unit_a\\unit_a_01_This_mod_is_one_of.json",
+      "octave": 3,
+      "category": "unit_a"
+    },
+    {
+      "name": "02 the first modules",
+      "file": "PATCHES\\unit_a\\unit_a_02_the_first_modules.json",
+      "octave": 3,
+      "category": "unit_a"
+    },
+    {
+      "name": "03 ever. It all started",
+      "file": "PATCHES\\unit_a\\unit_a_03_ever_It_all_started.json",
+      "octave": 3,
+      "category": "unit_a"
+    },
+    {
+      "name": "04 in 1987 when Karsten",
+      "file": "PATCHES\\unit_a\\unit_a_04_in_1987_when_Karsten.json",
+      "octave": 3,
+      "category": "unit_a"
+    },
+    {
+      "name": "05 Obarski made The",
+      "file": "PATCHES\\unit_a\\unit_a_05_Obarski_made_The.json",
+      "octave": 3,
+      "category": "unit_a"
+    },
+    {
+      "name": "06 Ultimate Soundtracker",
+      "file": "PATCHES\\unit_a\\unit_a_06_Ultimate_Soundtracke.json",
+      "octave": 3,
+      "category": "unit_a"
+    }
+  ]
+}

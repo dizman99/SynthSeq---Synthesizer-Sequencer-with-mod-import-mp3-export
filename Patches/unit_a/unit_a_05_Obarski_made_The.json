@@ -1,0 +1,97 @@
+{
+  "format": "synth-patch",
+  "version": 1,
+  "name": "unit_a_05_Obarski_made_The",
+  "source": {
+    "type": "sample",
+    "wave": "sine",
+    "root": "C4",
+    "loop": false,
+    "loop_start": 0.0,
+    "loop_end": 1.0,
+    "loop_xfade": 0.0,
+    "loop_snap": false,
+    "sample": {
+      "file": "..\\..\\WAV\\unit_a\\unit_a_05_Obarski_made_The.wav",
+      "file_abs": "C:\\!Source\\!Python\\SynthSeq\\WAV\\unit_a\\unit_a_05_Obarski_made_The.wav"
+    }
+  },
+  "envelope": {
+    "attack": 0.002,
+    "decay": 0.002,
+    "sustain": 1.0,
+    "release": 0.005
+  },
+  "volume": 0.3,
+  "unison": 1,
+  "detune": 0.0,
+  "normalize": false,
+  "modulator": null,
+  "effects": [
+    {
+      "type": "Vocoder",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Filter",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Offset-LFO",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Overdrive",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Fuzz",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Distortion",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Bitcrusher",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Flanger",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Chorus",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Phaser",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Tremolo",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Echo",
+      "enabled": false,
+      "params": {}
+    },
+    {
+      "type": "Reverb",
+      "enabled": false,
+      "params": {}
+    }
+  ]
+}

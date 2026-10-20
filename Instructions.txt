@@ -1,0 +1,400 @@
+SYNTHSEQ - INSTRUCTIONS
+=======================
+
+This text explains the parts of SynthSeq that are not obvious from just trying things out. The program interface
+is in German; the names of buttons and fields are quoted exactly as they appear on screen, with a short
+explanation in English. Most things can be found out by experimenting - the points that need a hint are marked
+with "NOTE".
+
+Contents
+  1. Folders and files
+  2. Keyboard and knobs
+  3. Generator tab (synthesizer / sampler)
+  4. Loops and samples
+  5. Effects, including the vocoder how-to
+  6. Recording and "Effekte anwenden"
+  7. SoundBank tab
+  8. Sequencer tab
+  9. Effect commands (code table)
+ 10. Importing a MOD file
+ 11. Exporting WAV / MP3
+ 12. Command-line tools
+ 13. Troubleshooting
+ 14. File formats in short
+
+
+1. FOLDERS AND FILES
+--------------------
+Start the program with "python main.py". Next to the program these folders are created automatically:
+
+  WAV          samples and recordings. The MOD importer creates one subfolder per module (WAV\<Module>\).
+  PATCHES      patch files (.json). Subfolders are allowed (the MOD importer uses PATCHES\<Module>\).
+  SOUNDBANK    bank files (.json).
+  SEQUENCER    songs (.json) and import logs (<Song>_import.txt).
+  EXPORT       exported WAV / MP3 files (created when you export for the first time).
+
+The hierarchy is WAV -> PATCHES -> SOUNDBANK -> SEQUENCER:
+  a patch refers to its WAV file, a bank refers to patches, a song refers to patches.
+All references are RELATIVE to the program folder. NOTE: You can move the whole program folder anywhere, but do
+not rename, move or delete single files inside WAV / PATCHES without a reason - everything that refers to them
+breaks (the SoundBank then shows a grey tile or a "WAV fehlt" hint, a song track shows "Patch fehlt").
+Patches and songs must lie inside the program folder; the file dialogs of the SoundBank only accept patches from
+PATCHES.
+
+"settings.json" (next to the program) remembers the last bank, the recording correction and the last MOD folder.
+Deleting it is harmless.
+Whenever the program overwrites a patch, bank or song it keeps the previous version as <name>.bak.
+
+
+2. KEYBOARD AND KNOBS
+---------------------
+Piano keys (two rows of the German keyboard):
+  white keys:  Q W E R T Z U I O P Ü
+  black keys:  2 3 5 6 7 9 0
+Octave:        F1 - F5. Octave 3 means: the key Q plays C4.
+Knobs:         drag with the mouse, mouse wheel, or arrow keys; Shift = fine, Ctrl = coarse,
+               double click = reset to the default value.
+NOTE: In the Sequencer tab the arrow keys move the grid cursor instead of turning knobs.
+NOTE: When the cursor is in a text field (the search box, a rename dialog) the piano keys do not play.
+      Press Return or Esc, or click on an empty area, to give the keyboard back to the piano.
+
+
+3. GENERATOR TAB
+----------------
+Top row         Waveform: "Sinus" (sine), "Rechteck" (square), "Sägezahn" (sawtooth), "Rauschen" (noise).
+                "Oktave (F1-F5)": the octave of the keyboard.
+"Quelle:"       "Generator" plays the waveform. "Sample" plays a loaded WAV file (see section 4).
+Tiles           "Hüllkurve / Lautstärke": Attack, Decay, Sustain, Release (seconds, Sustain = level) and Volume.
+                "Loop-Punkte": Loop-Start, Loop-Ende, Crossfade (only for samples).
+                "Unisono": number of voices (1-9) and "Verstimmung" (detune in cents).
+                Then one tile per effect with an on/off checkbox (see section 5).
+Buttons         "Patch speichern…" / "Patch laden…": store or load everything on screen as a patch file
+                  (dialogs start in PATCHES).
+                "Defaults": set everything back to the basic sound.
+                "● Record" / "■ Stop": record the output (section 6).
+                "Zurück in die Bank": only active when you came from the SoundBank (section 7).
+
+Tips for sound design
+  - Supersaw: sawtooth, "Unisono" 7, "Verstimmung" 15-25; add Chorus and Reverb for a trance lead.
+  - Sawtooth and square use band-limited wavetables, so high notes stay clean (little aliasing).
+  - With unison every key press starts the voices at random phases; each note sounds very slightly different.
+  - Short envelope (Decay 0.1, Sustain 0) plus Echo gives plucked "dub" stabs.
+  - A very short loop in a sample (Loop-Start and Loop-Ende close together) turns it into an oscillator.
+
+
+4. LOOPS AND SAMPLES
+--------------------
+Load a sample:  "Quelle:" -> "Sample", then "Lade WAV…". Any WAV (mono or stereo, 8/16/24/32 bit) works;
+                stereo is mixed down to mono.
+"Root-Note:"    The note at which the sample plays at its original pitch. Change it to tune the keyboard:
+                the sample then works as a sampler instrument.
+"Normalize"     Raises the sample to a standard peak level.
+NOTE: When a WAV is loaded (also when a patch loads it) the silence at the beginning and the end is trimmed
+      automatically (threshold about -42 dBFS, plus a short fade-out at the end). The displayed length is the
+      trimmed length. Loop points are stored as fractions (0..1) of the TRIMMED length.
+
+Loops
+  1. Tick "Loop" (in the "Quelle:" row). Two orange lines "S" (start) and "E" (end) appear in the waveform
+     display and move when you turn "Loop-Start" and "Loop-Ende". Untick it and the sample plays once.
+  2. The sample plays from the beginning up to the end marker, then repeats the part between S and E for as
+     long as the key is held.
+  3. A click at the loop point? Raise "Crossfade" (0.2 - 0.3 is a good start): the end of the loop is blended
+     with the material before the start. It has no effect if the loop starts at the very beginning.
+  4. "Nulldurchgang": moves the loop points to nearby zero crossings. This often helps tones; with speech it is
+     hardly audible.
+  5. The minimum loop length is 16 samples; extreme settings never cause silence or errors.
+Loop recipes
+  - Speech sample, loop one syllable around the vowel, Crossfade 0.2 = "robot tone".
+  - Loop plus Bitcrusher (Bits 6, Downsample 4) = lo-fi texture.
+
+
+5. EFFECTS
+----------
+The effect chain is fixed in this order (the order also determines the command codes, section 9):
+  Vocoder -> Filter -> Offset-LFO -> Overdrive -> Fuzz -> Distortion -> Bitcrusher -> Flanger -> Chorus ->
+  Phaser -> Tremolo -> Echo -> Reverb
+Each tile has an on/off checkbox; switching during a held note is click-free.
+"Mix" blends dry and effect signal. Start values in the examples below are just starting points - turn by ear.
+
+  Vocoder      "Pegel" (level), "Glättung" (smoothing), "Zischlaute" (sibilants), "Mix"
+  Filter       "Typ" 0 = low-pass, 1 = high-pass, 2 = band-pass; "Cutoff", "Resonanz", "LFO Rate Hz", "LFO Depth"
+               Wah: type 2, Resonanz 6, LFO rate 1.5, depth 0.6.  Acid bass: sawtooth, type 0, Resonanz 10.
+  Offset-LFO   fast rate = ring-modulation-like shimmer; sine + fast Offset-LFO = metallic bell
+  Overdrive    "Drive", "Härte" (hardness), "Tone", "Level"
+  Fuzz         "Sustain", "Bias" (higher = more spitting, asymmetrical), "Tone", "Level"
+  Distortion   "Drive" 1-30 (tanh saturation)
+  Bitcrusher   "Bits" 1-16, "Downsample" 1-32
+  Flanger      "Delay ms", "Depth ms", "Rate Hz", "Feedback" (negative = hollower)
+  Chorus       "Delay ms", "Depth ms", "Rate Hz"
+  Phaser       "Rate Hz", "Center Hz", "Depth", "Feedback", "Stufen" (stages 2-8)
+  Tremolo      "Rate Hz", "Depth"
+  Echo         "Delay ms", "Feedback", "Dämpfung" (damping: each repeat gets darker; 0 = off)
+  Reverb       "Raum" (room size), "Dämpfung"
+
+Vocoder - how to set it up (the most common question)
+  1. Choose the waveform "Sägezahn" (sawtooth) as the carrier, "Quelle:" = "Generator". Play a low octave,
+     for example F2. For the clearest robot voice use "Unisono" 1.
+  2. Click "Modulator laden…" and load a WAV with spoken text. A few seconds of a single voice with little
+     background noise works best. The label next to the button shows the file and its length.
+  3. Switch the Vocoder on (checkbox in its tile).
+  4. Hold a key. The speech is imposed on the tone you play; the modulator repeats as long as you hold the key.
+  5. Adjust:
+       "Glättung" low (about 0.1) = crisp and robotic; high = soft and blurred.
+       "Zischlaute" 0 = no "s" sounds; 0.3-0.6 = intelligible; 1.0 = lots of noise.
+       "Pegel" 1.0 is about the carrier level - raise or lower to taste.
+       "Mix" 1.0 = only the vocoded signal. (With Mix below 1 the effect part is delayed by about 17 ms.)
+  6. Choir pad: Unisono 7, Verstimmung 15, "Glättung" about 0.6, add Reverb. Chords of 3 keys work well.
+  7. Instead of the generator you can also use a second sample as the carrier ("Quelle:" = "Sample").
+  8. "Patch speichern…" stores the modulator file reference in the patch, so the sound comes back when you load
+     the patch (the WAV must stay in place).
+  NOTE: "Effekte anwenden" (section 6) ignores the modulator.
+
+
+6. RECORDING AND "EFFEKTE ANWENDEN"
+-----------------------------------
+"● Record" starts recording what the synthesizer plays (everything you hear from the Generator), "■ Stop" ends it.
+The recording is trimmed and a small window "Aufnahme prüfen" opens with the waveform, the duration, the peak
+level and the buttons "▶ Anhören" (listen), "Speichern…" (save as WAV, the dialog starts in WAV) and
+"Verwerfen" (discard). A checkbox lets you normalize before saving.
+
+"Effekte anwenden" (next to "Lade WAV…") renders the currently enabled effects into the loaded sample and opens
+the same window, so you can save a processed copy of the sample. Useful for baking a reverb or distortion into a
+sample. It does not include the vocoder modulator.
+
+
+7. SOUNDBANK TAB
+----------------
+A bank is an ordered list of patches shown as tiles. A tile shows the patch name, the source (sample file or
+waveform), extras (root note, loop, unison, modulator) and small coloured abbreviations of the active effects.
+Colours: sine blue, square orange, sawtooth green, noise grey, sample purple, missing = dark grey.
+
+Top row     "Neue Bank", "Bank laden", "Bank speichern", "Speichern unter" (dialogs start in SOUNDBANK),
+            "Patch hinzufügen" (select several patches at once), "Patch entfernen", and two arrow buttons that move
+            the active tile. An asterisk behind the bank name means unsaved changes.
+            Removing only removes the entry; the patch file stays in its folder.
+Filter row  "Kategorie" (category), "Suche" (search in name and category), "Sortierung", "Zurücksetzen".
+            Filter and sort only change the view, never the saved order. Moving tiles works only in the
+            plain bank order without filter.
+Tiles       - Click: loads the patch and plays it while the mouse button is held. The keyboard then plays this
+              sound, too.
+            - The spinbox on the tile is the start octave of this patch (1-5, octave 3: key Q = C4).
+              It is saved with the bank and used when the patch is assigned to a sequencer track.
+            - Double click: "Im Synth bearbeiten" - jumps to the Generator with the patch loaded.
+              Change what you like, then press "Zurück in die Bank". If something was changed you are asked
+              whether to save (the old version is kept as .bak), discard or stay.
+            - Right click menu: "Umbenennen" (display name only), "Im Synth bearbeiten", "Test parallel spielen 3 s"
+              (plays the patch with a second, independent engine so you can hear it over what you are playing),
+              "Kategorie" (suggestions: Bass, Lead, Pad, Keys, Strings, Perkussion, FX, Sonstige - or a new one),
+              "Patch neu verknüpfen" (only on grey tiles: pick the moved file again), "Aus Bank entfernen".
+NOTE: The last used bank is opened automatically at the next start. A bank with unsaved changes asks before it
+      is replaced or before the program is closed.
+NOTE: Patches can only be added from the PATCHES folder (subfolders are fine).
+
+
+8. SEQUENCER TAB
+----------------
+Overview
+  A song consists of up to 32 tracks, patterns (1-256 rows each) and an order list that says which pattern plays
+  when. Every track has exactly one patch. The tempo is set by "BPM" (20-300) and "Zeilen/Beat" (rows per
+  beat, 1-16); the label next to them shows the length of one row.
+
+Toolbar
+  "Neuer Song", "Song laden", "Speichern", "Speichern unter"  songs live in the program folder (SEQUENCER).
+  "MOD importieren…"      see section 10.       "WAV/MP3 speichern"   see section 11.
+  "▶ Play" / "■ Stop"     play. "Loop" repeats. The radio buttons "Pattern" / "Song" choose between playing
+                          only the selected pattern or the whole order list.
+  "Demo-Noten"            fills the current pattern with a demo chord pattern (asks before replacing notes).
+  "Metronom"              click track while playing.
+  "● Rec"                 live recording (below).
+  "Vorzähler (Beats)"     count-in beats before recording; "Korrektur (ms)": latency correction.
+
+Left side
+  "Patterns": list with "Neu", "Kopie", "Löschen"; "Zeilen": number of rows of the selected pattern.
+  "Reihenfolge": the order list. "Pattern" adds the selected pattern to the end, "Entfernen" removes the
+  selected entry, the arrow buttons or dragging move it, double click shows the pattern.
+Tracks table (right side)
+  Select a track by clicking its row or its header in the grid. "Patch wählen…" opens a menu with the
+  patches of the bank that is open in the SoundBank tab (grouped by category) plus "Datei wählen…" and
+  "Spur leeren". "Okt." is the octave used when you play notes on this track. "Mute" silences the track.
+  The "Pan" slider goes from L100 to R100 (double click = centre). The "Hinweis" column shows warnings such as
+  "Patch fehlt".
+  Hold the space bar (or the button "▶ Test (halten)") to hear the selected track's sound.
+
+The pattern grid
+  Every track has four fields: note | "Vol" | code | value. Only rows that contain something are filled in;
+  "--" means empty.
+  Entering notes: with the cursor in the note field press a piano key (same layout as in the Generator).
+  The cursor moves down by the "step" value (spinbox below the toolbar). A note lasts until the next note
+  on the same track or the end of the pattern; press "." to end the sounding note earlier.
+  Volume ("Vol"): two digits 00-99, linear. 99 = the volume of the patch, 00 = silent, empty ("--") = patch
+  volume. The volume acts before the effect chain. A volume stays valid for later notes of the track only
+  while you set it again - normally every note carries its own value.
+  Arrow keys:   Up / Down change the row (wrap around), Left / Right change the field
+                (note, Vol, code, value, then the next track).
+  Page Up/Down  one bar (4 beats) up / down;  Home / End  first / last row.
+  Delete / Backspace   remove the note (with a selection: clear the range, in the other fields: clear the value).
+  Shift+Delete  clear the selected track in the pattern (asks first);  Ctrl+Delete  clear the whole pattern (asks).
+  + / -         transpose the note by a semitone;  Shift + / -  (i.e. * / _ on a German keyboard) by an octave.
+  Ctrl+Page Up/Down  note volume +-10 (with Shift +-1), Ctrl+Home = empty.
+  Selection:    Shift+arrows, Ctrl+A (whole track), drag with the mouse, Shift+click extends.
+  Clipboard:    Ctrl+C / X / V; pasting uses the sound of the target track.
+  Undo / redo:  Ctrl+Z / Ctrl+Y (per song; live-recorded notes cannot be undone).
+  Mouse:        click = cursor; Shift+drag copies the selection; Ctrl+drag moves it; release outside to cancel.
+  M / S         mute / solo the selected track. Solo is only for the current session and not saved.
+  F1 - F5       octave of the selected track.   F11  list of effect codes.   F12  help with all keys.
+
+Live recording
+  1. Tick "● Rec", choose the track, set "Vorzähler (Beats)".
+  2. Press "▶ Play"; after the count-in play the piano keys. The notes are written to the pattern, start and end
+     rounded to the nearest row.
+  3. "Korrektur (ms)": compensates the audio latency. A value around +80 ms was found to be good; adjust it so
+     that recorded notes land on the rows you meant. The value is remembered.
+
+Saving
+  Songs must be saved inside the program folder (normally SEQUENCER). The song name is the file name.
+  The song stores the relative path of each track's patch, the start octave, mute flag and pan.
+
+
+9. EFFECT COMMANDS (CODE / VALUE COLUMNS)
+-----------------------------------------
+In the grid the third and fourth field of a track hold a command (two digits each). Code 00 = empty.
+The value 00-99 is mapped linearly onto the range of the parameter. Commands apply from their row on,
+independent of notes. Parameters glide to the new value within 20 ms; switches use the soft ramp of the effect.
+When playback stops or ends, pan, effect switches and parameters return to the values of the patch.
+(They are NOT reset when a loop repeats.) F11 shows the same list in the program.
+
+  01        Pan: 00 = left, 50 = centre, 99 = almost right
+  11 - 23   effect on/off (value 00 = off, anything else = on):
+            11 Vocoder, 12 Filter, 13 Offset-LFO, 14 Overdrive, 15 Fuzz, 16 Distortion, 17 Bitcrusher,
+            18 Flanger, 19 Chorus, 20 Phaser, 21 Tremolo, 22 Echo, 23 Reverb
+  30 - 80   effect parameters in the order of the chain:
+            30 Vocoder Pegel (0..4)      31 Glättung        32 Zischlaute      33 Mix
+            34 Filter Typ (0..2)         35 Cutoff          36 Resonanz (0.7..15)
+            37 LFO Rate (0.05..10 Hz)    38 LFO Depth       39 Mix
+            40 Offset-LFO Rate           41 Tiefe (0..0.33)
+            42 Overdrive Drive           43 Härte           44 Tone            45 Level (0..1.5)   46 Mix
+            47 Fuzz Sustain              48 Bias (0..0.6)   49 Tone            50 Level (0..1.5)   51 Mix
+            52 Distortion Drive (1..30)  53 Mix
+            54 Bitcrusher Bits (1..16)   55 Downsample (1..32)                  56 Mix
+            57 Flanger Delay ms (0.8..10) 58 Depth ms (0..5) 59 Rate (0.05..5)  60 Feedback (-0.95..0.95)  61 Mix
+            62 Chorus Delay ms (8..30)   63 Depth ms (0..8) 64 Rate (0.1..3)    65 Mix
+            66 Phaser Rate (0.05..5)     67 Center (200..2000 Hz)  68 Depth     69 Feedback (-0.9..0.9)
+            70 Stufen (2..8)             71 Mix
+            72 Tremolo Rate (0.5..20)    73 Depth
+            74 Echo Delay ms (50..1000)  75 Feedback (0..0.9)  76 Dämpfung      77 Mix
+            78 Reverb Raum               79 Dämpfung        80 Mix
+  Example: a filter sweep - row 0: code 12 value 99 (Filter on), then code 35 with values 10, 30, 50, 70, 99
+  in later rows (Cutoff opens step by step; the 20 ms glide smooths the steps).
+  There is no ramp command: build fades and sweeps from a series of values in consecutive rows.
+  NOTE: Integer parameters (Filter type, Phaser stages, Bitcrusher bits and downsample) change in steps
+  without a glide.
+  NOTE: Deleting a command while the song is playing takes effect after the next stop.
+
+
+10. IMPORTING A MOD FILE
+------------------------
+Button "MOD importieren…" in the toolbar of the Sequencer tab. Choose a .mod file (Amiga ProTracker and
+compatible modules with 4 to 8 channels: M.K., M!K!, 4CHN, 6CHN, 8CHN, FLT4/FLT8, CD81, OCTA; very old
+15-instrument modules are read as 4 channels - less tested).
+The import takes a moment, then the new song is loaded, the new bank is opened in the SoundBank tab (unless
+the SoundBank asks about unsaved changes first), and a window shows the import log. The log is also saved as
+SEQUENCER\<Module>_import.txt.
+
+What is created (<Module> = the file name of the .mod, cleaned up for Windows):
+  WAV\<Module>\<Module>_NN_<sample name>.wav       every sample of the module (mono, 16 bit; NN = instrument number)
+  PATCHES\<Module>\<Module>_NN_<sample name>.json  a patch for every instrument that is used at least 5 times
+  SOUNDBANK\<Module>.json                          a bank with these patches (category = module name,
+                                                   start octave 3, names like "01 bass drum")
+  SEQUENCER\<Module>.json                          the song, ready to play
+
+How the conversion works
+  - Samples keep their original pitch relation: the sample rate is 8363 Hz (adjusted by the finetune value),
+    the root note is C4. In the song, Amiga note C-2 is C4.
+  - Tracker channels can change the instrument at every note, but a track here has one patch. Therefore the song
+    uses ONE TRACK PER INSTRUMENT. A second track for the same instrument is only created if two notes of it
+    overlap, only if it has at least 5 notes and only while tracks are left (max. 32).
+  - Not converted (the log counts them): instruments with fewer than 5 notes, overlapping notes without a free
+    track, volume changes during a note, volume slides, portamento, vibrato, arpeggio, sample offset,
+    other "E" commands, pattern break and position jump. Notes that are cut at the end of a pattern lose
+    their decay.
+  - Volume: every note gets its volume (Cxx or the instrument's default) as the "Vol" value.
+  - Tempo: one fixed BPM is calculated from the average row length of the module (4 rows per beat). Speed and
+    tempo changes (swing) are lost, the song length stays right.
+  - Pan: each track gets the classic Amiga side (channels 1 and 4 left, 2 and 3 right), +-50.
+  - Imports that already exist are recognised (same sample sizes) and overwritten; previous patches, the bank
+    and the song are kept as .bak. If a module with the same name but different samples exists, the new one gets
+    the name <Module>_2.
+NOTE: The result is a starting point, not a perfect copy. The idea is to take the samples and patterns and
+      continue creatively: replace instruments with synth sounds, add effects and commands, rearrange.
+NOTE: Loops of imported samples come from 8-bit material and sometimes click or sit slightly off. Fix them in the
+      Generator: double click the tile in the SoundBank, adjust "Loop-Start", "Loop-Ende", "Crossfade" and
+      "Nulldurchgang", then "Zurück in die Bank". The import log marks loops that the automatic trimming moves.
+NOTE: .mod files are not part of this project; use modules you are allowed to use.
+
+
+11. EXPORTING WAV / MP3
+-----------------------
+Button "WAV/MP3 speichern" in the Sequencer toolbar. No questions are asked:
+  - The song that is currently open (including unsaved changes) is rendered once, from start to end, in a
+    background thread (faster than real time). A small window shows the progress and has an "Abbrechen" button.
+  - Files: EXPORT\<song name>.wav and EXPORT\<song name>.mp3. Existing files with the same name are overwritten.
+    A song that was never saved is called "song".
+  - After the end of the song the tail of reverb, echo and releases is rendered, up to 8 seconds, and trailing
+    silence is cut off with a very short fade-out.
+  - Muted tracks (the Mute setting stored in the song) stay silent; "Solo" is not used. The metronome is never
+    included.
+  - The sound is identical to the playback. The only difference: if the mix would clip (peak above 0 dBFS),
+    the whole file is lowered to -1 dBFS instead of being hard-limited. The window tells you about this.
+  - WAV: 16 bit stereo, 44.1 kHz.   MP3: 256 kbit/s stereo.
+  - MP3 needs the optional package lameenc ("pip install lameenc"). Without it only the WAV is written and the
+    window says so.
+  - When finished, the window shows duration, peak level and the file paths; "Ordner öffnen" opens the folder.
+
+
+12. COMMAND-LINE TOOLS
+----------------------
+  python modsong.py module.mod [-o log.txt]       complete MOD import without the GUI (report, WAVs, patches,
+                                                   bank and song); the log is printed and optionally saved
+  python modimport.py module.mod                  only the analysis report (nothing is written)
+  python modimport.py module.mod --export [-o log.txt]   report plus WAVs, patches and bank (no song)
+Run them in the program folder.
+
+
+13. TROUBLESHOOTING
+-------------------
+No sound at start / error about the number of channels (PortAudio -9998)
+    This happens when a Bluetooth headset is in its mono "hands-free" profile. The program then tries another
+    configuration (standard device in stereo, otherwise mono, otherwise another device of the same driver
+    type); the console shows a message starting with "Mixer:". Choosing the headset's stereo profile or another
+    output device in the Windows sound settings also helps.
+Crackling or dropouts (slow computer)
+    Switch off effects you do not need, reduce "Unisono", use fewer tracks. The audio code runs in real time,
+    so heavy sounds can overload a slow machine; exporting to WAV is not affected by this.
+A key does not play
+    Focus is probably in a text field - press Return or Esc (see section 2).
+Grey tile / "Patch fehlt" / "WAV fehlt"
+    A file was moved, renamed or deleted. Restore it, or use "Patch neu verknüpfen" in the right-click menu of
+    the tile. A patch whose WAV is missing plays as plain generator sound.
+A song track shows a warning in the "Hinweis" column
+    Usually a missing or invalid patch. Pick the patch again with "Patch wählen…".
+Imported song sounds thin or different
+    Read the import log (section 10): it lists what was not converted. Add volume changes and effects with the
+    "Vol" field and the effect commands.
+MP3 missing after export
+    Install lameenc (pip install lameenc) and export again.
+Old patches and banks
+    New fields are always read with defaults, so files from older versions keep loading. When a patch lacks
+    an effect parameter, the knob keeps its current position instead of resetting.
+
+
+14. FILE FORMATS IN SHORT
+-------------------------
+All files are readable UTF-8 JSON and can be edited with any text editor. Every file has "format" and "version".
+  synth-patch   name, source {type "generator"|"sample", wave, root, loop, loop_start, loop_end, loop_xfade,
+                loop_snap, sample {file (relative), file_abs}}, envelope {attack, decay, sustain, release}, volume,
+                unison, detune, normalize, modulator, effects [{type, enabled, params {name: value}}]
+  synth-bank    name, patches [{name, file (relative), octave, category}]
+  synth-song    name, bpm, rows_per_beat, tracks (32 x {name, patch, octave, mute, pan}),
+                patterns [{name, rows, notes [[row, track, semitone, length_in_rows, volume 0-99 or null]],
+                cmds [[row, track, code, value]]}], order [pattern indices]
+  Semitones are absolute: 0 = C4. Track numbers in the files start at 0.
