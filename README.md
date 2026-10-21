@@ -22,19 +22,19 @@
 
 **Generator** – oscillators or samples, envelope, unison, loop points and a chain of 13 effects:
 
-![Generator](1.png)
+![Generator](Screenshots/1.PNG)
 
 **SoundBank** – patches as tiles, banks, categories, search and sort:
 
-![SoundBank](2.png)
+![SoundBank](Screenshots/2.PNG)
 
 **Sequencer** – 32 tracks, patterns, song order, effect commands:
 
-![Sequencer](3.png)
+![Sequencer](Screenshots/3.PNG)
 
 **MOD import** – a classic tracker module converted into samples, patches, a sound bank and a ready-to-play song, including the import log:
 
-![Sequencer after a MOD import](4.png)
+![Sequencer after a MOD import](Screenshots/4.PNG)
 
 ## Features
 
